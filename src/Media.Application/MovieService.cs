@@ -1,5 +1,4 @@
-﻿using Media.Data;
-using Media.Entities;
+﻿using Media.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,25 +8,25 @@ namespace Media.Application
 {
     public class MovieService : IMovieService
     {
-        XDocument doc;
+        XDocument _doc;
 
-        public XDocument XMLDataSource 
+        public XDocument XmlDataSource 
         { 
             get
             {
-                if (doc == null)
+                if (_doc == null)
                 {
-                    doc = XDocument.Load(@"http://cucamovies.azurewebsites.net/Movies.xml");
+                    _doc = XDocument.Load(@"http://cucamovies.azurewebsites.net/Movies.xml");
                 }
 
 
-                return doc;
+                return _doc;
             }
         }
 
         public IEnumerable<Movie> GetAllMovies()
         {
-            var result = from item in XMLDataSource.Descendants("Movie")
+            var result = from item in XmlDataSource.Descendants("Movie")
                          select new Movie
                          {
                              Id = Convert.ToInt32(item.Element("Id").Value),
@@ -42,7 +41,7 @@ namespace Media.Application
         public Movie GetMovieById(int movieId)
         {
             string stringMovieId = movieId.ToString();
-            var result = from item in XMLDataSource.Descendants("Movie")
+            var result = from item in XmlDataSource.Descendants("Movie")
                          where item.Element("Id").Value == stringMovieId
                          select new Movie
                          {
@@ -58,7 +57,7 @@ namespace Media.Application
 
         public List<Movie> SearchMovies(string searchString)
         {
-            var result = from item in XMLDataSource.Descendants("Movie")
+            var result = from item in XmlDataSource.Descendants("Movie")
                          where item.Element("Name").Value.ToUpper().StartsWith(searchString.ToUpper())
                          select new Movie
                          {

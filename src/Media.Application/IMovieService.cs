@@ -1,5 +1,4 @@
-﻿using Media.Data;
-using Media.Entities;
+﻿using Media.Entities;
 using System.Collections.Generic;
 
 namespace Media.Application
