@@ -14,16 +14,16 @@ using System.Windows;
 
 namespace MediaHost
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        HubConnection connection = null;
-        IHubProxy proxy = null;
-        string remoteGroup;
-        string mediaCenterProcessName;
-        string relayURL;
-        SynchronizationContext magic;
-        IMovieService movieService;
-        IntPtr handle;
+        HubConnection _connection;
+        IHubProxy proxy;
+        string _remoteGroup;
+        readonly string _mediaCenterProcessName;
+        readonly string _relayUrl;
+        SynchronizationContext _magic;
+        private readonly IMovieService _movieService;
+        IntPtr _handle;
         
         private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
         private const int APPCOMMAND_VOLUME_UP = 0xA0000;
@@ -40,19 +40,19 @@ namespace MediaHost
         public MainWindow()
         {
             InitializeComponent();
-            mediaCenterProcessName = ConfigurationManager.AppSettings["MediaCenterProcessName"] ?? string.Empty;
-            if (string.IsNullOrEmpty(mediaCenterProcessName))
+            _mediaCenterProcessName = ConfigurationManager.AppSettings["MediaCenterProcessName"] ?? string.Empty;
+            if (string.IsNullOrEmpty(_mediaCenterProcessName))
             {
                 Log(MediaHost.Resources.Messages.MediaCenterProcessNameNotConfigured);
             }
 
-            relayURL = ConfigurationManager.AppSettings["RelayURL"] ?? string.Empty;
-            if (string.IsNullOrEmpty(relayURL))
+            _relayUrl = ConfigurationManager.AppSettings["RelayURL"] ?? string.Empty;
+            if (string.IsNullOrEmpty(_relayUrl))
             {
                 Log(MediaHost.Resources.Messages.RelayURLNotConfigured);
             }
 
-            movieService = new MovieService();
+            _movieService = new MovieService();
         }
 
         public string MediaPlayerPath
@@ -102,7 +102,7 @@ namespace MediaHost
             if (!string.IsNullOrEmpty(ProcessToKill))
             {
                 var process = Process.GetProcessesByName(ProcessToKill);
-                if (process.Count() > 0)
+                if (process.Length > 0)
                 {
                     process[0].Kill();
                     Thread.Sleep(3000);
@@ -112,7 +112,8 @@ namespace MediaHost
             try
             {
 
-                Process.Start(MediaPlayerPath, string.Format(@"""{0}""", Path.Combine(MoviesFolderPath, string.Format(@"{0}\{1}", name, fileName))));
+                Process.Start(MediaPlayerPath,
+                    $@"""{Path.Combine(MoviesFolderPath, $@"{name}\{fileName}")}""");
                 Log(string.Format(MediaHost.Resources.Messages.MoviePlayed, name, fileName));
             }
             catch
@@ -123,13 +124,13 @@ namespace MediaHost
 
         private bool IsMediaCenterRunning()
         {
-            if(!string.IsNullOrEmpty(mediaCenterProcessName))
+            if(!string.IsNullOrEmpty(_mediaCenterProcessName))
             {
-                Process process = Process.GetProcessesByName(mediaCenterProcessName).FirstOrDefault();
+                Process process = Process.GetProcessesByName(_mediaCenterProcessName).FirstOrDefault();
 
                 if (process != null)
                 {
-                    handle = process.MainWindowHandle;
+                    _handle = process.MainWindowHandle;
                     return true;
                 }
             }
@@ -141,71 +142,71 @@ namespace MediaHost
         {
             if (IsMediaCenterRunning())
             {
-                SendMessageW(handle, WM_APPCOMMAND, handle, (IntPtr)commandId);
+                SendMessageW(_handle, WM_APPCOMMAND, _handle, (IntPtr)commandId);
             }
             else
             {
-                Log(string.Format(MediaHost.Resources.Messages.MediaCenterNotConfiguredOrNotRunning, mediaCenterProcessName));
+                Log(string.Format(MediaHost.Resources.Messages.MediaCenterNotConfiguredOrNotRunning, _mediaCenterProcessName));
             }
         }
 
         private async Task InitializeConnection()
         {
-            remoteGroup = cmbGroupName.Text;
-            connection = new HubConnection(relayURL);
-            proxy = connection.CreateProxy("RelayHub");
-            magic = SynchronizationContext.Current;
+            _remoteGroup = cmbGroupName.Text;
+            _connection = new HubConnection(_relayUrl);
+            proxy = _connection.CreateProxy("RelayHub");
+            _magic = SynchronizationContext.Current;
 
             proxy.On("PlayPause", () =>
             {
-                magic.Post((_) =>
+                _magic.Post((_) =>
                 {
-                    Log(string.Format("Play / Pause"));
+                    Log("Play / Pause");
                     SendWindowsMessage(APPCOMMAND_MEDIA_PLAY_PAUSE);
                 }, null);
             });
 
             proxy.On("MuteUnmute", () =>
             {
-                magic.Post((_) =>
+                _magic.Post((_) =>
                 {
-                    Log(string.Format("Mute / Unmute"));
+                    Log("Mute / Unmute");
                     SendWindowsMessage(APPCOMMAND_VOLUME_MUTE);
                 }, null);
             });
 
             proxy.On("VolumeUp", () =>
             {
-                magic.Post((_) =>
+                _magic.Post((_) =>
                 {
-                    Log(string.Format("Volume Up"));
+                    Log("Volume Up");
                     SendWindowsMessage(APPCOMMAND_VOLUME_UP);
                 }, null);
             });
 
             proxy.On("VolumeDown", () =>
             {
-                magic.Post((_) =>
+                _magic.Post((_) =>
                 {
-                    Log(string.Format("Volume Down"));
+                    Log("Volume Down");
                     SendWindowsMessage(APPCOMMAND_VOLUME_DOWN);
                 }, null);
             });
 
             proxy.On("Stop", () =>
             {
-                magic.Post((_) =>
+                _magic.Post((_) =>
                 {
-                    Log(string.Format("Stop"));
+                    Log("Stop");
                     SendWindowsMessage(APPCOMMAND_MEDIA_STOP);
                 }, null);
             });
 
             proxy.On("PlayMovie", (movieId) =>
             {
-                magic.Post((_) =>
+                _magic.Post((_) =>
                 {
-                    Movie movie = movieService.GetMovieById((int)movieId);
+                    Movie movie = _movieService.GetMovieById((int)movieId);
                     if (movie != null)
                     {
                         PlayMovie(movie.Name, movie.FileName);
@@ -216,9 +217,9 @@ namespace MediaHost
 
             try
             {
-                await connection.Start();
+                await _connection.Start();
                 Log("After connection.Start()");
-                await proxy.Invoke("JoinRelay", remoteGroup);
+                await proxy.Invoke("JoinRelay", _remoteGroup);
                 Log("After JoinRelay");
             }
             catch (Exception pants)
