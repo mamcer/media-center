@@ -99,25 +99,25 @@ namespace MediaHost
 
         private void PlayMovie(string name, string fileName)
         {
-            if (!string.IsNullOrEmpty(this.ProcessToKill))
+            if (!string.IsNullOrEmpty(ProcessToKill))
             {
-                var process = Process.GetProcessesByName(this.ProcessToKill);
+                var process = Process.GetProcessesByName(ProcessToKill);
                 if (process.Count() > 0)
                 {
                     process[0].Kill();
-                    System.Threading.Thread.Sleep(3000);
+                    Thread.Sleep(3000);
                 }
             }
 
             try
             {
 
-                Process.Start(this.MediaPlayerPath, string.Format(@"""{0}""", Path.Combine(this.MoviesFolderPath, string.Format(@"{0}\{1}", name, fileName))));
-                this.Log(string.Format(MediaHost.Resources.Messages.MoviePlayed, name, fileName));
+                Process.Start(MediaPlayerPath, string.Format(@"""{0}""", Path.Combine(MoviesFolderPath, string.Format(@"{0}\{1}", name, fileName))));
+                Log(string.Format(MediaHost.Resources.Messages.MoviePlayed, name, fileName));
             }
             catch
             {
-                this.Log(string.Format(MediaHost.Resources.Messages.ErrorTryingToPlay, name, fileName));
+                Log(string.Format(MediaHost.Resources.Messages.ErrorTryingToPlay, name, fileName));
             }
         }
 
@@ -129,7 +129,7 @@ namespace MediaHost
 
                 if (process != null)
                 {
-                    this.handle = process.MainWindowHandle;
+                    handle = process.MainWindowHandle;
                     return true;
                 }
             }
@@ -208,7 +208,7 @@ namespace MediaHost
                     Movie movie = movieService.GetMovieById((int)movieId);
                     if (movie != null)
                     {
-                        this.PlayMovie(movie.Name, movie.FileName);
+                        PlayMovie(movie.Name, movie.FileName);
                     }
                     Log(string.Format("Playing Movie Id: " + movieId.ToString()));
                 }, null);
