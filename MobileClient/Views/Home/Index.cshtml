@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<h2>Cuca Movies</h2>
+
+<ul data-role="listview" data-inset="true">
+    <li data-role="list-divider">Options</li>
+    <li>@Html.ActionLink("Last Added", "Last", "Home")</li>
+    <li>@Html.ActionLink("Favourites", "Favourites", "Home")</li>
+    <li>@Html.ActionLink("All", "All", "Home")</li>
+    <li>@Html.ActionLink("Index", "IndexSearch", "Home")</li>
+    <li>@Html.ActionLink("Search", "Search", "Home")</li>
+    <li>@Html.ActionLink("Controls", "MediaControl", "Home")</li>
+</ul>

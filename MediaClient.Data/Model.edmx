@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="YMoviesModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="YMoviesModelStoreContainer">
+          <EntitySet Name="Movie" EntityType="YMoviesModel.Store.Movie" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MovieRequest" EntityType="YMoviesModel.Store.MovieRequest" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_MovieRequest_Movie" Association="YMoviesModel.Store.FK_MovieRequest_Movie">
+            <End Role="Movie" EntitySet="Movie" />
+            <End Role="MovieRequest" EntitySet="MovieRequest" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Movie">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="FileName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Sinopsis" Type="text" />
+        </EntityType>
+        <EntityType Name="MovieRequest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MovieId" Type="int" Nullable="false" />
+          <Property Name="Play" Type="bit" Nullable="false" />
+          <Property Name="Processed" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_MovieRequest_Movie">
+          <End Role="Movie" Type="YMoviesModel.Store.Movie" Multiplicity="1" />
+          <End Role="MovieRequest" Type="YMoviesModel.Store.MovieRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movie">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MovieRequest">
+              <PropertyRef Name="MovieId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="YMoviesModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="YMoviesEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Movie" EntityType="YMoviesModel.Movie" />
+          <EntitySet Name="MovieRequest" EntityType="YMoviesModel.MovieRequest" />
+          <AssociationSet Name="FK_MovieRequest_Movie" Association="YMoviesModel.FK_MovieRequest_Movie">
+            <End Role="Movie" EntitySet="Movie" />
+            <End Role="MovieRequest" EntitySet="MovieRequest" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Movie">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="FileName" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Sinopsis" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="MovieRequest" Relationship="YMoviesModel.FK_MovieRequest_Movie" FromRole="Movie" ToRole="MovieRequest" />
+        </EntityType>
+        <EntityType Name="MovieRequest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="MovieId" Type="Int32" Nullable="false" />
+          <Property Name="Play" Type="Boolean" Nullable="false" />
+          <Property Name="Processed" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Movie" Relationship="YMoviesModel.FK_MovieRequest_Movie" FromRole="MovieRequest" ToRole="Movie" />
+        </EntityType>
+        <Association Name="FK_MovieRequest_Movie">
+          <End Role="Movie" Type="YMoviesModel.Movie" Multiplicity="1" />
+          <End Role="MovieRequest" Type="YMoviesModel.MovieRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movie">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MovieRequest">
+              <PropertyRef Name="MovieId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="YMoviesModelStoreContainer" CdmEntityContainer="YMoviesEntities">
+          <EntitySetMapping Name="Movie">
+            <EntityTypeMapping TypeName="YMoviesModel.Movie">
+              <MappingFragment StoreEntitySet="Movie">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Sinopsis" ColumnName="Sinopsis" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MovieRequest">
+            <EntityTypeMapping TypeName="YMoviesModel.MovieRequest">
+              <MappingFragment StoreEntitySet="MovieRequest">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MovieId" ColumnName="MovieId" />
+                <ScalarProperty Name="Play" ColumnName="Play" />
+                <ScalarProperty Name="Processed" ColumnName="Processed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

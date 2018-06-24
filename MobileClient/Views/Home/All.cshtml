@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Media.Entities.Movie>
+
+@{
+    ViewBag.Title = "All Movies";
+}
+
+<h2>Todas las Peliculas</h2>
+
+@foreach (var item in Model) {
+    @Html.ActionLink(item.Name, "ShowDetails", "Movie", new { movieId=item.Id }, htmlAttributes:null)
+    <br>
+}

@@ -1,0 +1,15 @@
+﻿@model Media.Entities.Movie
+
+@{
+    ViewBag.Title = "Detail";
+}
+
+<h2>@Model.Name</h2>
+
+<div class="display-field">
+    @Html.DisplayFor(model => model.Sinopsis)
+</div>
+<p>
+    @Html.ActionLink("Ver", "ViewMovie", "Movie", new { movieId = Model.Id }, htmlAttributes: null) |
+    @Html.ActionLink("Volver al listado", "All", controllerName: "Home")
+</p>

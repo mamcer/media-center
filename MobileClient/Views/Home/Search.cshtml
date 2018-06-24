@@ -1,0 +1,20 @@
+﻿@model MobileClient.Models.SearchModel 
+
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Buscar</h2>
+
+@using (Html.BeginForm("Search", "Search")) {
+
+    <ul data-role="listview" data-inset="true">
+        <li data-role="fieldcontain">
+            @Html.TextBoxFor(m => m.SearchString)
+        </li>
+
+        <li data-role="fieldcontain">
+            <input type="submit" value="Buscar" />
+        </li>
+    </ul>
+}

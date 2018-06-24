@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Media.Entities.Movie>
+
+
+@{
+    ViewBag.Title = "Favourites";
+}
+
+<h2>Favoritas</h2>
+
+@foreach (var item in Model) {
+    @Html.ActionLink(item.Name, "ShowDetails", "Movie", new { movieId=item.Id }, htmlAttributes:null)
+    <br>
+}

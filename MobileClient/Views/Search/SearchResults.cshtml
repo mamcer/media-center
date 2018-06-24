@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Media.Entities.Movie>
+
+@{
+    ViewBag.Title = "Resultados";
+}
+
+<h2>@ViewBag.Message</h2>
+<h3>Total: @ViewBag.ResultCount resultados</h3>
+
+@foreach (var item in Model) {
+    @Html.ActionLink(item.Name, "ShowDetails", "Movie", new { movieId=item.Id }, htmlAttributes:null)
+    <br>
+}

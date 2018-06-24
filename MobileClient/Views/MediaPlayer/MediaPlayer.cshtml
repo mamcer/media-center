@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "MediaControl";
+}
+
+<h2>Cuca Movies</h2>
+
+<ul data-role="listview" data-inset="true">
+    <li data-role="list-divider">Media Player</li>
+    <li>@Html.ActionLink("Play/Pause", "PlayPause", "MediaPlayer")</li>
+    <li>@Html.ActionLink("Stop", "Stop", "MediaPlayer")</li>
+    <li>@Html.ActionLink("Volume Up", "VolumeUp", "MediaPlayer")</li>
+    <li>@Html.ActionLink("Volume Down", "VolumeDown", "MediaPlayer")</li>
+    <li>@Html.ActionLink("Mute Volume", "Mute", "MediaPlayer")</li>
+</ul>

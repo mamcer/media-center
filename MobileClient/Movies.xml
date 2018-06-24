@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!--Cuca Movies-->
+<Movies>
+  <Movie>
+    <Id>1</Id>
+    <Name>Movie Name 01</Name>
+    <Sinopsis>Movie Sinopsis 01</Sinopsis>
+    <PosterURL>Poster Path</PosterURL>
+    <LocationId>1</LocationId>
+    <FileName>movie-file-name-01.mkv</FileName>
+  </Movie>
+  <Movie>
+    <Id>1</Id>
+    <Name>Movie Name 02</Name>
+    <Sinopsis />
+    <PosterURL>Poster Path</PosterURL>
+    <LocationId>2</LocationId>
+    <FileName>movie-file-name-02.avi</FileName>
+  </Movie>
+</Movies>
