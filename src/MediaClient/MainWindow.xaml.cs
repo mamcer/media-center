@@ -1,4 +1,5 @@
-﻿using SignalR.Client.Hubs;
+﻿using System;
+using SignalR.Client.Hubs;
 using System.Windows;
 using System.Windows.Controls;
 using System.Linq;
@@ -8,14 +9,14 @@ using Media.Entities;
 
 namespace MediaClient
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        HubConnection connection = null;
-        IHubProxy proxy = null;
-        string remoteGroup;
-        string url;
-        List<Movie> movies;
-        IMovieService movieService;
+        HubConnection _connection;
+        IHubProxy proxy;
+        string _remoteGroup;
+        string _url;
+        List<Movie> _movies;
+        readonly IMovieService movieService;
 
 
         public MainWindow()
@@ -28,22 +29,21 @@ namespace MediaClient
         private async void btnConnect_Click(object sender, RoutedEventArgs e)
         {
             // hardcoded! 
-            url = "http://cuca.azurewebsites.net/";
+            _url = "http://cuca.azurewebsites.net/";
 
-            remoteGroup = cmbGroupName.Text;
-            connection = new HubConnection(url);
-            proxy = connection.CreateProxy("RelayHub");
-            await connection.Start();
-            await proxy.Invoke("JoinRelay", remoteGroup);
+            _remoteGroup = cmbGroupName.Text;
+            _connection = new HubConnection(_url);
+            proxy = _connection.CreateProxy("RelayHub");
+            await _connection.Start();
+            await proxy.Invoke("JoinRelay", _remoteGroup);
             grdMediaButtons.IsEnabled = true;
         }
 
         private void MediaButton_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = sender as Button;
-            if (btn != null)
+            if (sender is Button btn)
             {
-                proxy.Invoke(btn.Tag.ToString(), remoteGroup);
+                proxy.Invoke(btn.Tag.ToString(), _remoteGroup);
             }
         }
 
@@ -53,9 +53,9 @@ namespace MediaClient
             txtSinopsis.Text = string.Empty;
             txtSearch.Text = string.Empty;
 
-            movies = movieService.GetAllMovies().ToList();
-            movies.Sort((x, y) => x.Name.CompareTo(y.Name));
-            foreach (var movie in movies)
+            _movies = movieService.GetAllMovies().ToList();
+            _movies.Sort((x, y) => String.Compare(x.Name, y.Name, StringComparison.Ordinal));
+            foreach (var movie in _movies)
             {
                 lstMovies.Items.Add(movie.Name);
             }
@@ -67,7 +67,7 @@ namespace MediaClient
             {
                 if (lstMovies.SelectedIndex > -1)
                 {
-                    return movies[lstMovies.SelectedIndex];
+                    return _movies[lstMovies.SelectedIndex];
                 }
 
                 return null;
@@ -76,23 +76,23 @@ namespace MediaClient
 
         private void lstMovies_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.SelectedMovie != null)
+            if (SelectedMovie != null)
             {
-                txtSinopsis.Text = this.SelectedMovie.Sinopsis;
+                txtSinopsis.Text = SelectedMovie.Sinopsis;
             }
         }
 
         private void btnViewMovie_Click(object sender, RoutedEventArgs e)
         {
-            if (this.SelectedMovie != null)
+            if (SelectedMovie != null)
             {
-                proxy.Invoke("PlayMovie", this.SelectedMovie.Id, remoteGroup);
+                proxy.Invoke("PlayMovie", SelectedMovie.Id, _remoteGroup);
             }
         }
 
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            int index = movies.FindIndex(m => m.Name.ToUpper().Contains(txtSearch.Text.ToUpper()));
+            int index = _movies.FindIndex(m => m.Name.ToUpper().Contains(txtSearch.Text.ToUpper()));
             if (index > -1)
             {
                 lstMovies.SelectedIndex = index;
