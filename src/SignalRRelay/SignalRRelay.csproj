@@ -87,9 +87,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\PublishProfiles\aldebaran.pubxml" />
-    <None Include="Properties\PublishProfiles\cucarelay - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\cucarelay - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
