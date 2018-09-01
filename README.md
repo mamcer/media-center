@@ -7,7 +7,7 @@ In `original` branch you will find the original source code for this application
 
 ## Description 
 
-Back in 2011 I bought a mini pc an configured it to function as a media center. Basically installing XBMC (renamed to [Kodi](https://kodi.tv/) in 2014) and copying different family videos, digital movies and old DVDs converted to mp4 or mkv files. 
+Back in 2011 I bought a mini PC and configured it to function as a media center. Basically installing XBMC (renamed to [Kodi](https://kodi.tv/) in 2014) and copying different family videos, digital movies and old DVDs converted to mp4 or mkv files. 
 
 The idea behind this set of applications was to remotely control the media center, navigating a web application from a smartphone or tablet. Using SignalR realtime capabilities to send commands to the media center like play a specific movie and offer a basic playback control without the need of a keyboard or mouse.
 
