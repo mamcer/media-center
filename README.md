@@ -5,6 +5,8 @@ A WPF, SignalR relay and ASP .NET MVC application from 2012
 
 In `original` branch you will find the original source code for this application. In `master` an upgraded, refactored version.
 
+> More details about why I published this project in [this blog post](https://mamcer.github.io/2018-09-02-i-cleaned-up-my-virtual-basement/)
+
 ## Description 
 
 Back in 2011 I bought a mini PC and configured it to function as a media center. Basically installing XBMC (renamed to [Kodi](https://kodi.tv/) in 2014) and copying different family videos, digital movies and old DVDs converted to mp4 or mkv files. 
